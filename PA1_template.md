@@ -11,7 +11,7 @@ if (!file.exists("activity.csv")) {
 }
 ```
 
-Read the data into a data frame and change the date format into Date
+Read the data into a data frame and change the date format into Date  
 
 ```r
 # read activity.csv
@@ -22,26 +22,24 @@ activity.file[, 2] <- as.Date(activity.file[, 2]) ## format column 2 (date) as D
 ```
 
 
-
 ## What is mean total number of steps taken per day?
 
-Remove missing values and calculate the number of steps per day.
-Plot the total number of steps taken per day
+Remove missing values and calculate the number of steps per day.  Plot the total number of steps taken per day  
 
 ```r
 activity <- subset(na.omit(activity.file)) ## remove NA
 steps.per.day <- aggregate(steps ~ date, activity, sum) ## calculate the number of steps per day
 
 library(ggplot2)
-h <- ggplot(steps.per.day, aes(x=date, y=steps)) + 
-      geom_bar(stat = "identity", colour="green") + 
-      ggtitle("Total number of steps taken per day") + 
-      xlab("Date") + 
-      ylab("Number of Steps")
+h <- ggplot(steps.per.day, aes(x = steps)) + 
+     geom_histogram(fill = "red", binwidth = 1000) + 
+     ggtitle("Total number of steps taken per day") +
+     xlab("Number of Steps") + 
+     ylab("Count")   
 print(h)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/fig1-1.png) 
 
 Compute the mean and median
 
@@ -81,10 +79,10 @@ j <- ggplot(steps.interval, aes(interval)) +
 print(j)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/fig2-1.png) 
 
 
-Find which interval has the maximum number of steps
+Find which interval has the maximum number of steps  
 
 
 ```r
@@ -99,7 +97,7 @@ the.interval
 
 
 ## Imputing missing values
-Find the total number of missing values.
+Find the total number of missing values.  
 
 ```r
 total.NA <- sum(is.na(activity.file$steps))
@@ -111,7 +109,7 @@ total.NA
 ```
 ### The total number of missing values in the data aset is 2304
 
-Impute missing values with the mean number of steps per day
+Impute missing values with the mean number of steps per day  
 
 ```r
 library(Hmisc)
@@ -139,15 +137,15 @@ Plot the total number of steps taken per day after missing values were imputed.
 
 
 ```r
-k <- ggplot(new.steps.per.day, aes(x=date, y=steps)) + 
-        geom_bar(stat = "identity", colour="blue") + 
-        ggtitle("Total number of steps taken per day after imputing NAs") + 
-        xlab("Date") + 
-        ylab("Number of Steps")
+k <- ggplot(new.steps.per.day, aes(x = steps)) + 
+        geom_histogram(fill = "green", binwidth = 1000) + 
+        ggtitle("Total number of steps taken per day after imputing NAs ") +
+        xlab("Number of Steps") + 
+        ylab("Count")   
 print(k)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+![](PA1_template_files/figure-html/fig3-1.png) 
 
 Compute the mean and median for the newly imputed data
 
@@ -229,6 +227,6 @@ g <- ggplot(impute.data, aes(interval, steps, color = weektype)) +
 print(g)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-13-1.png) 
+![](PA1_template_files/figure-html/fig4-1.png) 
 
 There is a slight difference in activity pattern between weekdays and weekends.  More steps were taken during the morning of weekdays compared to weekends.

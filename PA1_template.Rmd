@@ -15,7 +15,7 @@ if (!file.exists("activity.csv")) {
 }
 ```
 
-Read the data into a data frame and change the date format into Date
+Read the data into a data frame and change the date format into Date  
 ```{r}
 # read activity.csv
 activity.file <- read.csv("activity.csv", stringsAsFactors = FALSE, na.strings ="NA")
@@ -25,21 +25,19 @@ activity.file[, 2] <- as.Date(activity.file[, 2]) ## format column 2 (date) as D
 ```
 
 
-
 ## What is mean total number of steps taken per day?
 
-Remove missing values and calculate the number of steps per day.
-Plot the total number of steps taken per day
-```{r}
+Remove missing values and calculate the number of steps per day.  Plot the total number of steps taken per day  
+```{r fig1}
 activity <- subset(na.omit(activity.file)) ## remove NA
 steps.per.day <- aggregate(steps ~ date, activity, sum) ## calculate the number of steps per day
 
 library(ggplot2)
-h <- ggplot(steps.per.day, aes(x=date, y=steps)) + 
-      geom_bar(stat = "identity", colour="green") + 
-      ggtitle("Total number of steps taken per day") + 
-      xlab("Date") + 
-      ylab("Number of Steps")
+h <- ggplot(steps.per.day, aes(x = steps)) + 
+     geom_histogram(fill = "red", binwidth = 1000) + 
+     ggtitle("Total number of steps taken per day") +
+     xlab("Number of Steps") + 
+     ylab("Count")   
 print(h)
 ```
 
@@ -57,7 +55,7 @@ median.steps
 
 ## What is the average daily activity pattern?
  Calculate the mean steps in the 5-minute intervals and then plot the time series
-```{r}
+```{r fig2}
 steps.interval <- aggregate(steps ~ interval, activity, mean) ## calculate the mean steps in the 5-min intervals
 
 j <- ggplot(steps.interval, aes(interval)) + 
@@ -69,7 +67,7 @@ print(j)
 ```
 
 
-Find which interval has the maximum number of steps
+Find which interval has the maximum number of steps  
 
 ```{r}
 the.interval <- steps.interval$interval[which.max(steps.interval$steps)] # determine which interval has the maximun number of steps
@@ -79,14 +77,14 @@ the.interval
 
 
 ## Imputing missing values
-Find the total number of missing values.
+Find the total number of missing values.  
 ```{r}
 total.NA <- sum(is.na(activity.file$steps))
 total.NA
 ```
 ### The total number of missing values in the data aset is `r total.NA`
 
-Impute missing values with the mean number of steps per day
+Impute missing values with the mean number of steps per day  
 ```{r}
 library(Hmisc)
 impute.data <- activity.file
@@ -95,12 +93,12 @@ new.steps.per.day <- aggregate(steps ~ date, impute.data, sum) ## sum of steps p
 ```
 Plot the total number of steps taken per day after missing values were imputed.
 
-```{r}
-k <- ggplot(new.steps.per.day, aes(x=date, y=steps)) + 
-        geom_bar(stat = "identity", colour="blue") + 
-        ggtitle("Total number of steps taken per day after imputing NAs") + 
-        xlab("Date") + 
-        ylab("Number of Steps")
+```{r fig3}
+k <- ggplot(new.steps.per.day, aes(x = steps)) + 
+        geom_histogram(fill = "green", binwidth = 1000) + 
+        ggtitle("Total number of steps taken per day after imputing NAs ") +
+        xlab("Number of Steps") + 
+        ylab("Count")   
 print(k)
 ```
 
@@ -132,7 +130,7 @@ str(impute.data)
 
 Change the steps type to numeric and plot the graph into panel based on weektype
 
-```{r}
+```{r fig4}
 impute.data$steps <- as.numeric(impute.data$steps)
 
 g <- ggplot(impute.data, aes(interval, steps, color = weektype)) +
